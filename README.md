@@ -1,5 +1,5 @@
 
-[![NPM](https://nodei.co/npm/vue-feedback.png)](https://github.com/hjc22/vue-m-swiper)
+[![NPM](https://nodei.co/npm/vue-m-swiper.png)](https://github.com/hjc22/vue-m-swiper)
 
 [![npm](https://img.shields.io/npm/dm/vue-m-swiper.svg)]()
 
