@@ -1,10 +1,10 @@
 
-[![NPM](https://nodei.co/npm/vue-m-swiper.png)](https://github.com/hjc22/vue-m-swiper)
+[![NPM](https://nodei.co/npm/vue-m-swipers.png)](https://github.com/hjc22/vue-m-swiper)
 
-[![npm](https://img.shields.io/npm/dm/vue-m-swiper.svg)]()
+[![npm](https://img.shields.io/npm/dm/vue-m-swipers.svg)]()
 
 
-# vue-m-swiper
+# vue-m-swipers
 
 > Vue v2.0 移动端无缝轮播图组件
 
@@ -14,14 +14,14 @@
 
 ``` bash
 # 安装 npm 模块
-npm install vue-m-swiper --save
+npm install vue-m-swipers --save
 
 #组件内直接引入
-import { mSwiper } from 'vue-m-swiper'
+import { mSwiper } from 'vue-m-swipers'
 组件使用：1.components:{ mSwiper:mSwiper };2.<m-swiper />
 
 # 或者 Vue.use()全局安装
-import mSwiper from 'vue-m-swiper'
+import mSwiper from 'vue-m-swipers'
 Vue.use(mSwiper)
 
 
