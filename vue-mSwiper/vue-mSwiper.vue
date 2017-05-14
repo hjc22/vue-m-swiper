@@ -2,13 +2,13 @@
     <div class="m-swiper"  @touchstart="touchStart($event)" @touchmove="touchMove($event)" @touchend="touchEnd($event)" ref="swiper">
         <ul class="m-swiper-items" v-if="data.length!==0" :style="{'transform':transX,'transition':isAnim,width:(100*(loopOpt?itemLength+2:itemLength))+'%'}">
           <m-swiper-item v-if="loopOpt" key="swiper">
-            <img :src="data[0][urlName]?data[data.length-1][urlName]:data[data.length-1]" class="swiper-img" @click="$emit('click',data.length-1)"/>
+            <img :src="urlName?data[data.length-1][urlName]:data[data.length-1]" class="swiper-img" @click="$emit('click',data.length-1)"/>
           </m-swiper-item>
            <m-swiper-item v-for="(item,index) in data" key="swiper">
-             <img :src="item[urlName]?item[urlName]:item" class="swiper-img" @click="$emit('click',index)"/>
+             <img :src="urlName?item[urlName]:item" class="swiper-img" @click="$emit('click',index)"/>
            </m-swiper-item>
            <m-swiper-item v-if="loopOpt" key="swiper">
-             <img :src="data[0][urlName]?data[0][urlName]:data[0]" class="swiper-img" @click="$emit('click',0)"/>
+             <img :src="urlName?data[0][urlName]:data[0]" class="swiper-img" @click="$emit('click',0)"/>
            </m-swiper-item>
         </ul>
         <div class="m-swiper-dots">
@@ -58,8 +58,8 @@ export default {
        default:0
     },
     urlName:{
-       type:String,
-       default:'img'
+       type:[String,Boolean]
+       default:false
     }
   },
 

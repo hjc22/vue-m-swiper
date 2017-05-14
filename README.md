@@ -34,6 +34,8 @@ Vue.use(mSwiper)
 | :--------: | :----------------:| :-----: | :-------: |
 | loop | 是否开启无限循环切换 |  Boolean   | true |
 | data | 图片数组对象 |  Array  | 无([{ img:xxxx },{ img:xxxx }]) |
+| urlName | 指定图片url的属性名，没有就是通过数组的索引来查找 | String | 无 |
+
 | auto | 自动播放时间（单位：ms）和是否开启自动（只在loop为true的情况下有效） | Number | 0 |
 | initIndex | 初始化默认展示第几页 | Number  | 0 |
 | @click | 轮播点击事件默认第一个参数为每页的index | Function | 无 |
