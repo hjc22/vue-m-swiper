@@ -58,8 +58,8 @@ export default {
        default:0
     },
     urlName:{
-       type:[String,Boolean]
-       default:false
+       type:[String,Boolean],
+       default:'img'
     }
   },
 
@@ -200,15 +200,19 @@ export default {
        this.optionsInit();
        this.mountedInit();
     },
+    stopSwiper(){
+       this.timer && clearInterval(this.timer);
+       this.queue.length=0;
+    }
   },
   activated(){
      if(this.loopOpt && this.auto) this.autoPlay();
   },
   destroyed(){
-     this.timer && clearInterval(this.timer);
+     this.stopSwiper();
   },
   deactivated(){
-    this.timer && clearInterval(this.timer);
+    this.stopSwiper();
   },
   watch:{
      initIndex(n,o){
