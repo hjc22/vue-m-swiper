@@ -1,13 +1,13 @@
 <template>
-    <div class="m-swiper" @touchstart="touchStart($event)" @touchmove="touchMove($event)" @touchend="touchEnd($event)" ref="swiper">
-        <ul class="m-swiper-items" :style="{'transform':transX,'transition':isAnim,width:(100*(loop?itemLength+2:itemLength))+'%'}">
-          <m-swiper-item v-if="loop" key="swiper">
+    <div class="m-swiper"  @touchstart="touchStart($event)" @touchmove="touchMove($event)" @touchend="touchEnd($event)" ref="swiper">
+        <ul class="m-swiper-items" v-if="data.length!==0" :style="{'transform':transX,'transition':isAnim,width:(100*(loopOpt?itemLength+2:itemLength))+'%'}">
+          <m-swiper-item v-if="loopOpt" key="swiper">
             <img :src="data[data.length-1].img" class="swiper-img" @click="$emit('click',data.length-1)"/>
           </m-swiper-item>
            <m-swiper-item v-for="(item,index) in data" key="swiper">
              <img :src="item.img" class="swiper-img" @click="$emit('click',index)"/>
            </m-swiper-item>
-           <m-swiper-item v-if="loop" key="swiper">
+           <m-swiper-item v-if="loopOpt" key="swiper">
              <img :src="data[0].img" class="swiper-img" @click="$emit('click',0)"/>
            </m-swiper-item>
         </ul>
@@ -37,6 +37,8 @@ export default {
         timer:null,
         touchsLength:1,
         queue:[],
+        list:[],
+        loopOpt:true
     }
   },
   props:{
@@ -56,11 +58,12 @@ export default {
        default:0
     },
   },
-  created(){
-     this.optionsInit();
-  },
+
   mounted(){
-     this.mountedInit();
+    if(this.data.length==0) return;
+    this.optionsInit();
+    this.mountedInit();
+
   },
   computed:{
       transX(){
@@ -68,21 +71,21 @@ export default {
       },
       isAnim(){
         return 'all '+this.transDuration+'ms';
-      },
-
+      }
   },
   methods:{
     optionsInit(){
        this.itemLength=this.data.length;
        if(this.initIndex>this.itemLength-1) return console.error('iniIndex Can not be bigger than data length');
        this.dotsIndex=this.initIndex;
-       this.activeIndex=this.loop?this.initIndex+1:this.initIndex;
+       this.loopOpt=this.itemLength>1?this.loop:false;
+       this.activeIndex=this.loopOpt?this.initIndex+1:this.initIndex;
 
     },
     mountedInit(){
-       this.swiperWidth=this.$el.clientWidth;
+       this.swiperWidth=this.$el.clientWidth || this.$root.$el.clientWidth || window.innerWidth;
        this.transNumber=-this.swiperWidth*this.activeIndex;
-       if(this.auto && this.loop) this.autoPlay();
+       if(this.auto && this.loopOpt) this.autoPlay();
     },
     touchPos(e){
       var touches = e.changedTouches, l = touches.length, touch, tagX, tagY,time;
@@ -95,7 +98,8 @@ export default {
       this.oPos.x = tagX;this.oPos.y = tagY;this.oPos.time=new Date();
     },
     touchStart(e,fn){
-        if(this.loop){
+        this.swiperWidth=this.$el.offsetWidth;
+        if(this.loopOpt){
           this.stopTransition(0);
           if(this.activeIndex==this.itemLength+1){
             this.activeIndex=1;
@@ -140,7 +144,7 @@ export default {
           this.endNumber=0;
           this.touchPos(e);
           var duration=new Date()-this.startT,moveX=this.oPos.x-this.startX,moveY=this.oPos.y-this.startY;
-          if(this.auto && this.loop) this.autoPlay();
+          if(this.auto && this.loopOpt) this.autoPlay();
           this.queue.pop();
           if(!moveX) return;
           if(Number(duration) > 200) return this.action(moveX,this.swiperWidth/2)
@@ -150,7 +154,7 @@ export default {
     },
     action(move,midPos){
           if(this.touchesLength>1) return;
-          if(this.loop){
+          if(this.loopOpt){
             if(move > midPos){
               this.activeIndex--;
               if(this.dotsIndex<=0) this.dotsIndex=this.itemLength-1;
@@ -166,9 +170,6 @@ export default {
              this.noLoop(move,midPos);
           }
         this.transNumber=-(this.activeIndex*this.swiperWidth);
-
-
-
     },
     prevent(e){
         e.preventDefault();
@@ -196,6 +197,15 @@ export default {
        this.mountedInit();
     },
   },
+  activated(){
+     if(this.loopOpt && this.auto) this.autoPlay();
+  },
+  destroyed(){
+     this.timer && clearInterval(this.timer);
+  },
+  deactivated(){
+    this.timer && clearInterval(this.timer);
+  },
   watch:{
      initIndex(n,o){
         if(n==o) return;
@@ -204,6 +214,13 @@ export default {
      loop(n,o){
         if(n==o) return;
         this.optionsWatch();
+     },
+     data(n,o){
+        if(n==o) return;
+        this.$nextTick(()=>{
+          this.optionsInit();
+          this.mountedInit();
+        })
      }
   },
   components:{ mSwiperItem }
@@ -216,9 +233,11 @@ export default {
    position: relative;
    width: 100%;
    overflow: hidden;
+   height: 100%;
 }
 .m-swiper-items{
    font-size: 0;
+   height: 100%;
 }
 .m-swiper-dots{
    position: absolute;
