@@ -1,4 +1,4 @@
-var {mSwiper} = require('./vue-mSwiper');
+var mSwiper = require('./vue-mSwiper/vue-mSwiper.vue');
 var vueMSwiper = {
   mSwiper: mSwiper,
   install: function(Vue) {
